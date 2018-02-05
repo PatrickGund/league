@@ -11,6 +11,7 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const dbStore = new SequelizeStore({db});
 const passport = require('passport');
 const User = require('./routes/users.js');
+require('../secrets.js');
 
 app.use(passport.initialize());
 app.use(passport.session());

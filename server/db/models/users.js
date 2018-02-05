@@ -9,6 +9,9 @@ const User = db.define('user', {
 		type: Sequelize.STRING,
 		allowNull: false
 	},
+	google_id: {
+		type: Sequelize.STRING
+	},
 	email: {
 		type: Sequelize.STRING,
 		unique: true,
