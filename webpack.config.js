@@ -1,20 +1,53 @@
+const LiveReloadPlugin = require('webpack-livereload-plugin');
+const isDev = process.env.NODE_ENV === 'development';
+
 module.exports = {
-	entry: './client/index.js',
+	entry: ['babel-polyfill', './client/index.js'],
 	output: {
 		path: __dirname,
-		filename: './bundle.js'
+		filename: './public/bundle.js'
 	},
 	devtool: 'source-map',
 	module: {
+		noParse: /(mapbox-gl)\.js$/,
 		rules: [
 			{
 				test: /\.jsx?$/,
 				exclude: /(node_modules|bower_components)/,
-				loader: 'babel-loader',
-				options: {
-					presets: ['react', 'env', 'es2015']
-				}
+				loader: 'babel-loader'
+			},
+			{
+				test: /\.scss$/,
+				use: [
+					'style-loader',
+					'css-loader',
+					'sass-loader'
+				]
+			},
+			{
+				test: /\.(png|jpg)$/,
+				loader: 'url?limit=25000'
+			},
+			{
+				test: /\.html$/,
+				loader: 'html-loader?attrs[]=video:src'
+			}, {
+				test: /\.mp4$/,
+				loader: 'url?limit=10000&mimetype=video/mp4'
+			},
+			{
+				test: /\.svg$|\.ttf?|\.woff$|\.woff2|\.eof|\.eot/,
+				loader: 'file-loader'
 			}
 		]
-	}
+	},
+	// When we're in development, we can use this handy live-reload plugin
+	// to refresh the page for us every time we make a change to our client-side
+	// files. It's like `nodemon` for the front end!
+	plugins: isDev ? [new LiveReloadPlugin({ appendScriptTag: true })] : [],
+	// target: 'node',
+	// externals: {
+	//   fs: 'commonjs fs',
+	//   path: 'commonjs path'
+	// }
 };
